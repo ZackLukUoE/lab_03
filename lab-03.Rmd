@@ -11,6 +11,7 @@ library(nycflights13)
 library(tidyverse)
 library(ggplot2)
 library(infer)
+library(dplyr)
 ```
 
 _Note, if nycflights13 in not installed in your system, RStudio might prompt you to install it, or simply run `install.packages("nycflights13")` in the console._
@@ -24,6 +25,7 @@ _Note, if nycflights13 in not installed in your system, RStudio might prompt you
 ```{r subset-data}
 jan_feb_flights <- flights %>%
   filter(month %in% c(1, 2))
+jan_feb_flights
 ```
 
 ## 1.2 Column Overview
@@ -54,7 +56,13 @@ jan_feb_flights |>
 jan_feb_flights |>
   select(where(is.character)) |> 
   names()
+#names(jan_feb_flights)[sapply(jan_feb_flights, is.integer)]
 
+# which columns are double
+names(jan_feb_flights)[sapply(jan_feb_flights, is.double)]
+
+# which columns are character
+names(jan_feb_flights)[sapply(jan_feb_flights, is.character)]
 ```
 
 ```{r}
@@ -63,6 +71,7 @@ jan_feb_flights |>
   select(where(anyNA)) |> 
   names()
 #colSums(is.na(jan_feb_flights))
+names(jan_feb_flights)[colSums(is.na(jan_feb_flights)) > 0]
 ```
 
 **Summary:**  
