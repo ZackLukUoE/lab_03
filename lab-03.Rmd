@@ -34,24 +34,35 @@ Are there missing values?
 
 ```{r}
 # explore the types of the columns in jan_feb_flights
-
+jan_feb_flights |> sapply(typeof)
 ```
 
 ```{r}
 # which columns are integer
-
+#jan_feb_flights |> sapply(is.integer) 
+jan_feb_flights |>
+  select(where(is.integer)) |> 
+  names()
+#used gemini
 
 # which columns are double
-
+jan_feb_flights |>
+  select(where(is.double)) |> 
+  names()
 
 # which columns are character
-
+jan_feb_flights |>
+  select(where(is.character)) |> 
+  names()
 
 ```
 
 ```{r}
 # which columns contain NA's
-
+jan_feb_flights |>
+  select(where(anyNA)) |> 
+  names()
+#colSums(is.na(jan_feb_flights))
 ```
 
 **Summary:**  
@@ -73,19 +84,22 @@ _Your answer here_
 
 ## 2.1 Code
 
-```{r eval=FALSE} 
+```{r eval=TRUE} 
 ## REMEMBER TO SET eval=TRUE
 
 # join the datasets
-jan_feb_flights <- jan_feb_flights %>%
-  ____________(weather, by = c(______________________)) 
+jan_feb_flights <- jan_feb_flights |> 
+  left_join(weather, by = c("origin", "year", "month", "day", "hour"))
+jan_feb_flights
 ```
 
 ```{r}
 # is there a difference in wind speed when wind_gust is missing vs not missing?
+without_gust <- jan_feb_flights |> filter(is.na(wind_gust.x)) |>     summarise(mean = mean(wind_speed.x, na.rm = TRUE))
+with_gust <- jan_feb_flights |> filter(! is.na(wind_gust.x)) |>     summarise(mean = mean(wind_speed.x))
 
-
-
+without_gust
+with_gust
 ```
 
 Describe the difference in wind speed when wind_gust is missing vs not missing:
